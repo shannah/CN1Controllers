@@ -5,6 +5,7 @@
  */
 package com.codename1.demo.controllers.forms;
 
+import com.codename1.ui.controllers.ActionSupport;
 import com.codename1.ui.controllers.ControllerEvent;
 import com.codename1.ui.controllers.EventProducer;
 import com.codename1.ui.events.ActionListener;
@@ -17,7 +18,12 @@ import com.codename1.ui.util.EventDispatcher;
  */
 public class LoginForm extends com.codename1.ui.Form implements EventProducer {
 
-    private EventDispatcher listeners = new EventDispatcher();
+    private ActionSupport listeners = new ActionSupport();
+
+    @Override
+    public ActionSupport getActionSupport() {
+        return listeners;
+    }
     
     public class LoginFormEvent extends ControllerEvent {
         LoginFormEvent() {
@@ -67,17 +73,7 @@ public class LoginForm extends com.codename1.ui.Form implements EventProducer {
         });
     }
     
-    @Override
-    public void addActionListener(ActionListener l) {
-        listeners.addListener(l);
-    }
-    
-    @Override
-    public void removeActionListener(ActionListener l) {
-        listeners.removeListener(l);
-    }
-            
-
+   
 //////-- DON'T EDIT BELOW THIS LINE!!!
     protected com.codename1.ui.Label gui_Label = new com.codename1.ui.Label();
     protected com.codename1.ui.TextField gui_username = new com.codename1.ui.TextField();

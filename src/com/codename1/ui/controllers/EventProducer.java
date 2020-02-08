@@ -13,6 +13,5 @@ import com.codename1.ui.events.ActionListener;
  * @author shannah
  */
 public interface EventProducer {
-    public void addActionListener(ActionListener evt);
-    public void removeActionListener(ActionListener evt);
+    public ActionSupport getActionSupport();
 }

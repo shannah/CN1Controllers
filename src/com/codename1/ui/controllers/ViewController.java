@@ -7,6 +7,7 @@ package com.codename1.ui.controllers;
 
 import com.codename1.ui.Component;
 import com.codename1.ui.events.ActionListener;
+import com.codename1.ui.events.ActionSource;
 import com.codename1.ui.events.ComponentStateChangeEvent;
 
 /**
@@ -15,6 +16,7 @@ import com.codename1.ui.events.ComponentStateChangeEvent;
  */
 public class ViewController extends Controller {
     private Component view;
+    private static final String KEY = "com.codename1.ui.controllers.ViewController";
     
     private ActionListener viewListener = evt->{
         if (evt instanceof ControllerEvent) {
@@ -44,17 +46,35 @@ public class ViewController extends Controller {
     public void setView(Component view) {
         if (this.view != null) {
             if (this.view instanceof EventProducer) {
-                ((EventProducer)this.view).removeActionListener(viewListener);
+                ((EventProducer)this.view).getActionSupport().removeActionListener(viewListener);
+            } else if (this.view instanceof ActionSource) {
+                ((ActionSource)this.view).removeActionListener(viewListener);
             }
             this.view.removeStateChangeListener(stateChangeListener);
+            this.view.putClientProperty(KEY, null);
+            
         }
         this.view = view;
         if (this.view != null) {
             this.view.addStateChangeListener(stateChangeListener);
             if (this.view instanceof EventProducer) {
-                ((EventProducer)this.view).addActionListener(viewListener);
+                ((EventProducer)this.view).getActionSupport().addActionListener(viewListener);
+            } else if (this.view instanceof ActionSource) {
+                ((ActionSource)this.view).addActionListener(viewListener);
             }
+            this.view.putClientProperty(KEY, this);
         }
+    }
+    
+    public static ViewController getViewController(Component cmp) {
+        while (cmp != null) {
+            ViewController ctrl = (ViewController)cmp.getClientProperty(KEY);
+            if (ctrl != null) {
+                return ctrl;
+            }
+            cmp = cmp.getParent();
+        }
+        return null;
     }
     
     /**
